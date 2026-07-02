@@ -3,3 +3,18 @@ title: "20260626"
 output: html_document
 ---
 
+```{r}
+chum_data <- read_csv("~/R-with-Carl/20250730_AYKSSI_ASL_chum_export.csv")
+```
+
+```{r}
+chum_data %>% 
+filter(CollectionYear > 2010, StartLatitudeDD > 64)
+```
+```{r}
+chum_asl <- chum_data %>% filter(is.na(AgeYRS)== F)
+chum_asl %>% mutate(growthrate = LengthMM / AgeYRS, .after=LengthMM)
+```
+```{r}
+chum_data %>% arrange(desc(DNAngul) %>% select(ABLG, ExtractionPlate, Extractionwell, DNAngul))
+```
