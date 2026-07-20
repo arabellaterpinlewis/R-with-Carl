@@ -1,0 +1,161 @@
+---
+title: "07072026_inclass"
+author: "Arabella"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+coronavirus <- read.csv('https://raw.githubusercontent.com/RamiKrispin/coronavirus/master/csv/coronavirus.csv')
+```
+From lesson 9: Let’s start with summarizing the total number of cases by type as of the most recent day in the dataset: 2023-01-04. Take a minute to try this for yourself, then you can look at our approach.
+```{r}
+names(coronavirus)
+cvtotals <- coronavirus %>% group_by(type) %>% 
+  summarize(cases=sum(cases))
+kable(cvtotals)
+```
+Now, let’s plot the history of the daily counts of new confirmed cases worldwide
+```{r}
+coronavirus %>%  
+  filter(type == "confirmed") %>% 
+  group_by(date) %>% 
+  summarize(cvtotals = sum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = cvtotals)) +
+  geom_line()
+```
+Let's riff on that with the same data and make a new graph 
+```{r}
+basegraph <- coronavirus %>%  
+  filter(type == "confirmed") %>% 
+  group_by(date) %>% 
+  summarize(cvtotals = sum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = cvtotals)) 
+```
+```{r}
+basegraph + 
+  geom_point(
+    aes(size = cvtotals,
+        color = cvtotals),
+    alpha = 0.5
+  ) + 
+  theme_minimal()
+
+```
+Updating axis labels and titles: use labs to update axis labels
+```{r}
+basegraph +
+  geom_line() +
+  theme_classic() +
+  labs(
+    x="Date", 
+    y="Total confirmed cases",
+    subtitle = "Global sums")
+  
+```
+Take a minute to think about how you would generate a plot with a separate line showing the daily reports of new confirmed cases in each country.
+```{r}
+coronavirus %>% 
+  filter(type == "confirmed") %>% 
+  group_by(country, date) %>% 
+  summarise(total_cases = sum(cases)) %>% 
+  ggplot(mapping=(aes(x = date, y = total_cases, color = country))) + 
+  geom_line()
+```
+This does not display very well, so try laying down parameters. In this example, we're subsetting 10 countries with the highest total counts of confirmed cases. 
+
+```{r}
+top10_countries <- coronavirus %>% 
+  filter(type == "confirmed") %>% 
+  group_by(country) %>% 
+  summarize(cvtotals = sum(cases)) %>% 
+  arrange(-cvtotals) %>% 
+  head(10) %>% 
+  .$country
+
+
+coronavirus %>% 
+  filter(type =="confirmed", country %in% top10_countries) %>% 
+  group_by(country, date) %>% 
+  summarize(total_cases = sum(cases)) %>% 
+  ggplot(mapping = aes(x = date, y = total_cases, color = country)) + geom_line()+
+  facet_wrap(~country)
+```
+```{r}
+coronavirus %>% 
+  filter(type =="confirmed", country %in% top10_countries) %>% 
+  group_by(country) %>% 
+  arrange(date) %>%
+  mutate(cum_count = cumsum(cases)) %>%
+  ggplot(mapping=aes(x=date, y=cum_count, color=country)) + 
+  geom_line()
+```
+Time for bar charts!
+
+```{r}
+No_negatives <- coronavirus %>% filter(cases >=0)
+No_negatives %>%  
+  group_by(date) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases), color = "black")
+  
+```
+```{r}
+No_negatives %>%  
+  group_by(date, type) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill=type), size=.01)
+```
+```{r}
+No_negatives %>%  
+  group_by(date, type) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill=type), size=.01)+
+  coord_flip()
+```
+
+```{r}
+coronavirus %>% 
+  group_by(date, type) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x=date, y = cases, fill = type), color="black", size=0.1, position = "fill")
+```
+```{r}
+coronavirus %>% 
+  filter(cases > 0) %>% 
+  group_by(date, type) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill = type), size=0.1, position = "fill")
+```
+```{r}
+coronavirus %>% 
+  filter(cases > 0) %>% 
+  group_by(date, type) %>%
+  summarize(cases = sum(cases)) %>%
+  ggplot() +
+  geom_col(aes(x = date, y = cases, fill = type), position = "dodge")
+```
+```{r}
+install.packages("rnaturalearth")
+install.packages("rnaturalearthdata")
+install.packages("sf")
+```
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+filter(coronavirus, date == max(coronavirus$date), type == "confirmed", cases > 5000) %>%
+  ggplot() +
+  geom_sf(data = world) +
+  geom_point(aes(x=long, y=lat, size=cases), color="red", fill="red", alpha=0.5, shape=21) 
+```
+
+

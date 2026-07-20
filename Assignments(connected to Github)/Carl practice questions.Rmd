@@ -1,0 +1,29 @@
+---
+title: "7/2/2026 practice"
+author: "Arabella"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+chum_data <- read_csv("~/R-with-Carl/20250730_AYKSSI_ASL_chum_export.csv")
+```
+
+```{r}
+chum_data %>% 
+filter(CollectionYear > 2010, StartLatitudeDD > 64)
+```
+#Get the growthrate of males (1) and females (2) separately in two new columns
+```{r}
+chum_asl <- chum_data %>% filter(is.na(AgeYRS)== F)
+chum_asl %>% mutate(growthrate = LengthMM / AgeYRS, .after=LengthMM) %>% 
+  mutate(Male = Sex=="1")
+```
+```{r}
+
+```
+
