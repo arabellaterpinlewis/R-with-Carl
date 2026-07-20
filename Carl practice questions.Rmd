@@ -20,10 +20,32 @@ filter(CollectionYear > 2010, StartLatitudeDD > 64)
 #Get the growthrate of males (1) and females (2) separately in two new columns
 ```{r}
 chum_asl <- chum_data %>% filter(is.na(AgeYRS)== F)
-chum_asl %>% mutate(growthrate = LengthMM / AgeYRS, .after=LengthMM) %>% 
-  mutate(Male = Sex=="1")
+chum_asl %>% mutate(growthrate = LengthMM / AgeYRS, .after=LengthMM) 
+
+chum_data %>% mutate(growthrate = LengthMM/AgeYRS) %>% filter(Sex == 1)
 ```
+what is the largest fish caught at the earliest year?
 ```{r}
-
+chum_data %>% arrange(desc(LengthMM)) %>% 
+  arrange(CollectionYear) %>% 
+  select(ABLG, FreshwaterWatershed, LengthMM, CollectionYear)%>% 
+  filter(is.na(LengthMM)==F)
 ```
+which population has the largest mean length?
+```{r}
+chum_data %>% filter(is.na(LengthMM) == F) %>% summarise(mean_length = mean(LengthMM))
 
+mean(chum_data$LengthMM, na.rm = T)
+
+
+  chum_data %>% 
+  filter(is.na(LengthMM) == F) %>% 
+  group_by(FreshwaterWatershed) %>% 
+  summarise(mean_length = mean(LengthMM)) %>% 
+  arrange(desc(mean_length))
+  
+  #plot chum length on a boxplot
+ chum_length <- chum_data %>% filter(is.na(LengthMM) == F)
+  ggplot(data=chum_length) + geom_boxplot(mapping = aes(x=FreshwaterWatershed, y=LengthMM, fill=FreshwaterWatershed, color=FreshwaterWatershed)alpha=.5)
+```
+Anvik river had the largest mean length fish
