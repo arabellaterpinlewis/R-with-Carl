@@ -7,24 +7,62 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## GitHub Documents
+```{r}
+lotr <- read_csv("https://github.com/nt246/NTRES6940-data-science/blob/master/datasets/lotr_tidy.csv")
+```
+```{r}
+fship <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Fellowship_Of_The_Ring.csv")
 
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+ttow <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Two_Towers.csv")
 
-## Including Code
+rking <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/The_Return_Of_The_King.csv")
 
-You can include R code in the document as follows:
+lotr_untidy <- bind_rows(fship, ttow, rking)
+str(lotr_untidy)
 
-```{r cars}
-summary(cars)
+lotr_untidy
+
+```
+```{r}
+#tidying up the data
+lotr_tidy <-  lotr_untidy %>% 
+  pivot_longer(c(Male, Female), names_to = 'Gender', values_to = 'words')
+View(lotr_tidy)
+```
+```{r}
+lotr_tidy %>% 
+  pivot_wider(names_from=Race, values_from = words)
+```
+```{r}
+lotr_tidy %>% 
+  pivot_wider(names_from=Gender, values_from = words)
+```
+Let's get one variable per combo of race and gender
+
+```{r}
+lotr_tidy %>% 
+  unite(Race_Gender, Race, Gender) %>% 
+  pivot_wider(names_from=Race_Gender, values_from=words)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+Applying this to our coronavirus dataset
+```{r}
+coronavirus <- read_csv('https://raw.githubusercontent.com/RamiKrispin/coronavirus/master/csv/coronavirus.csv', col_types = cols(province = col_character()))
+```
+Converting to a wider format
+```{r}
+coronavirus_wide <- coronavirus %>% 
+  pivot_wider(names_from = type, values_from = cases)
+coronavirus_wide
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+coronavirus %>% 
+  filter(country == "Canada", cases >=0) %>% 
+  ggplot() +
+  geom_line(aes(x = date, y = cases, color = type))
+```
+```{r}
+
+```
+
