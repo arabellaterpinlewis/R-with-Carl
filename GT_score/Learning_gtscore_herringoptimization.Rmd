@@ -1,0 +1,20 @@
+---
+title: "Herring GTseq optimization"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+flashed <- read_tsv("C:/Users/arabella.lewis/Documents/R-with-Carl/GT_score/20260709_DNAplates172_176_rnd1_GTscore_locusSummary.txt")
+
+
+R1 <- read_tsv("C:/Users/arabella.lewis/Documents/R-with-Carl/GT_score/20260709_DNAplates172_176_R1_rnd1_GTscore_locusSummary.txt")
+
+
+
+cpal <- read_tsv("C:/Users/arabella.lewis/Documents/R-with-Carl/GT_score/cpal_172_176_optim1.rds")
+
+```
