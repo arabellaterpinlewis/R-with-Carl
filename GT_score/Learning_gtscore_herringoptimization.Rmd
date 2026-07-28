@@ -8,13 +8,36 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-flashed <- read_tsv("C:/Users/arabella.lewis/Documents/R-with-Carl/GT_score/20260709_DNAplates172_176_rnd1_GTscore_locusSummary.txt")
+flashed <- read_tsv("C:/Users/arabella.lewis/Documents/R-with-Carl/GT_score/20260709_DNAplates172_176_rnd1_GTscore_locusSummary.txt") %>% 
+  select(Locus, 'Primer Reads') %>% 
+  rename(flashed_reads='Primer Reads')
+
+R1 <- read_tsv("C:/Users/arabella.lewis/Documents/R-with-Carl/GT_score/20260709_DNAplates172_176_R1_rnd1_GTscore_locusSummary.txt") %>% 
+  select(Locus, 'Primer Reads') %>% 
+   rename(R1_reads='Primer Reads')
+
+#Joining or merging the datasets should allow for easier manipulation of data
+
+combo_df <- left_join(flashed, R1, by = 'Locus')
+head(combo_df)
+
+#Plot flashed and R1 reads by locus using a scatterplot
+
+combo_df %>% 
+   ggplot(mapping = aes(x = flashed_reads, y = R1_reads)) +
+  geom_point()
+
+```
+That is a nice graph, but we now want to highlight anything with an off target rate over 2
+```{r}
+combo_df %>% 
+  mutate(off_target_over2 = R1_reads / flashed_reads >= 2) %>% 
+  ggplot(mapping = aes(x = flashed_reads, y = R1_reads, color=off_target_over2)) +
+  geom_point()
+
+```
 
 
-R1 <- read_tsv("C:/Users/arabella.lewis/Documents/R-with-Carl/GT_score/20260709_DNAplates172_176_R1_rnd1_GTscore_locusSummary.txt")
-
-
-
+```{r}
 cpal <- read_tsv("C:/Users/arabella.lewis/Documents/R-with-Carl/GT_score/cpal_172_176_optim1.rds")
-
 ```
