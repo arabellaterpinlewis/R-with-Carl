@@ -22,15 +22,6 @@ View(flights)
 Imagine you wanted to draw the route each plane flies from its origin to its destination. What variables would you need? What tables would you need to combine? (This is in reference to the nycflights dataset).
 ```{r}
 #I'm thinking you'd need the lat and long data from the "airports" data set and the you'd join with flights by origin, but you also need the lat and long to correspond to the destination. In the datasheet "airports" we have the latitude and longitude of each airport, so how do we show it for both the origin and the destination? 
-
-flights1 <- flights %>% 
-  select(origin, dest, flight)
-View(flights1)
-
-flight_map <- airports %>% 
-  inner_join(flights, c("faa"="dest"))
-View(flight_map)
-  
   
 ```
 
@@ -45,14 +36,18 @@ flights2 <- flights %>%
   select(year:day, hour, origin, dest, tailnum, carrier)
 flights2
 ```
-The most commonly used join is the left join. Use this wehenver you look up additional data from another table, because it preserves the original observations even when there isn't a match. The left join should be your default. 
+The most commonly used join is the left join. Use this whenever you look up additional data from another table, because it preserves the original observations even when there isn't a match. The left join should be your default. 
 ```{r}
 #trying to compute average delay by destination then join on the `airports` dataframe to show spatial distribution of delays. 
 
-flights %>% 
-   rowwise() %>%
-  mutate(delay_mean = mean(c_across(c('dep_delay', 'arr_delay')), na.rm=TRUE))
-         
+delays <- flights %>% 
+  select(dep_delay, arr_delay, dest, origin, ) %>% 
+  group_by(dest) %>% 
+  summarize(mean_depdelay = mean(dep_delay, na.rm=TRUE), mean_arrdelay = mean(arr_delay, na.rm=TRUE))
+  
+#Is there a way to do mean delay time sorted by destination?
+  
+View(delays)
 ```
 
 ```{r}
@@ -62,5 +57,8 @@ airports %>%
   annotation_borders("state")+
   geom_point()+
   coord_quickmap()
+```
+```{r}
+
 ```
 
