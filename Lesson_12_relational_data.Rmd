@@ -44,21 +44,16 @@ delays <- flights %>%
   select(dep_delay, arr_delay, dest, origin, ) %>% 
   group_by(dest) %>% 
   summarize(mean_depdelay = mean(dep_delay, na.rm=TRUE), mean_arrdelay = mean(arr_delay, na.rm=TRUE))
-  
-#Is there a way to do mean delay time sorted by destination?
-  
-View(delays)
 ```
-
 ```{r}
-airports %>% 
-  semi_join(flights, c("faa" = "dest")) %>% 
-  ggplot(aes(lon,lat))+
+delays %>% 
+  inner_join(airports, c("dest"="faa")) %>%  
+  ggplot(aes(lon,lat,color=mean_depdelay))+
+  scale_color_viridis_b()+
   annotation_borders("state")+
   geom_point()+
   coord_quickmap()
 ```
-```{r}
 
-```
+
 
