@@ -63,6 +63,8 @@ coronavirus %>%
   geom_line(aes(x = date, y = cases, color = type))
 ```
 ```{r}
-
+coronavirus <- coronavirus %>% 
+  clean_names()
+names(coronavirus)
 ```
 
