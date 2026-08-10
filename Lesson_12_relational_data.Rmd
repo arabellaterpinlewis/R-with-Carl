@@ -18,6 +18,7 @@ rking <- read.csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/da
 
 
 View(flights)
+view(planes)
 ```
 Imagine you wanted to draw the route each plane flies from its origin to its destination. What variables would you need? What tables would you need to combine? (This is in reference to the nycflights dataset).
 ```{r}
