@@ -21,10 +21,9 @@ View(flights)
 view(planes)
 ```
 Imagine you wanted to draw the route each plane flies from its origin to its destination. What variables would you need? What tables would you need to combine? (This is in reference to the nycflights dataset).
-```{r}
-#I'm thinking you'd need the lat and long data from the "airports" data set and the you'd join with flights by origin, but you also need the lat and long to correspond to the destination. In the datasheet "airports" we have the latitude and longitude of each airport, so how do we show it for both the origin and the destination? 
-  
-```
+
+I'm thinking you'd need the lat and long data from the "airports" data set and the you'd join with flights by origin, but you also need the lat and long to correspond to the destination. In the datasheet "airports" we have the latitude and longitude of each airport, so how do we show it for both the origin and the destination? 
+
 
 This will bind the separate dataframes together
 ```{r}
@@ -34,18 +33,20 @@ lotr_untidy <- base::rbind(fship, ttow, rking)
 To practice the `join` functions, subset the `flights` dataframe as follows
 ```{r}
 flights2 <- flights %>% 
-  select(year:day, hour, origin, dest, tailnum, carrier)
+  select(year: %>% day, hour, origin, dest, tailnum, carrier)
 flights2
 ```
 The most commonly used join is the left join. Use this whenever you look up additional data from another table, because it preserves the original observations even when there isn't a match. The left join should be your default. 
-```{r}
-#trying to compute average delay by destination then join on the `airports` dataframe to show spatial distribution of delays. 
 
+#trying to compute average delay by destination then join on the `airports` dataframe to show spatial distribution of delays. 
+```{r}
 delays <- flights %>% 
-  select(dep_delay, arr_delay, dest, origin, ) %>% 
+  select(dep_delay, arr_delay, dest, origin, tailnum) %>% 
   group_by(dest) %>% 
   summarize(mean_depdelay = mean(dep_delay, na.rm=TRUE), mean_arrdelay = mean(arr_delay, na.rm=TRUE))
+View(delays)
 ```
+
 ```{r}
 delays %>% 
   inner_join(airports, c("dest"="faa")) %>%  
@@ -54,6 +55,40 @@ delays %>%
   annotation_borders("state")+
   geom_point()+
   coord_quickmap()
+```
+
+```{r}
+#Add latitude and longitude data to the flights tibble
+Locations <- flights %>% 
+  select(dest, origin, year, month, day, dep_time) %>% 
+  full_join(airports, c("dest"="faa")) %>% 
+  left_join(airports, c("origin"="faa")) 
+
+Locations %>% 
+  rename(dest_lat=lat.x, dest_long=lon.x, origin_lat=lat.y, origin_lon=lon.y)
+View(Locations)
+```
+This technically works but it's ugly/hard to read can you offer guidance?
+
+Is there a relationship between age of planes and their delays?
+```{r}
+clean_planes <- planes %>% select(tailnum, year) %>% 
+  arrange(year) %>% 
+  na.omit %>% 
+   rename(manufacture_year=year)
+```
+
+```{r}
+total_delays <- flights %>% 
+  mutate(sum_delays=dep_delay+arr_delay)
+```
+
+```{r}
+Age_delays <- total_delays %>%
+  full_join(clean_planes, by= "tailnum") 
+
+ggplot(data=Age_delays)+
+  geom_point(mapping=aes(x = manufacture_year, y = sum_delays, color=manufacture_year))
 ```
 
 
