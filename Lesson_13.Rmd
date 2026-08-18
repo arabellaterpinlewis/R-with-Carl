@@ -1,0 +1,27 @@
+---
+title: "Lesson_13"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#loading libraries
+```{r}
+library(tidyverse)
+library(maps)
+```
+Data import, export, and conversion between data types
+```{r}
+lotr_tidy <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/lotr_tidy.csv")
+challenge <- read_csv(readr_example("challenge.csv"))
+challenge <- read_csv(
+  readr_example("challenge.csv"), 
+  col_types = cols(
+    x = col_double(),
+    y = col_logical()
+  )
+)
+
+```
+
