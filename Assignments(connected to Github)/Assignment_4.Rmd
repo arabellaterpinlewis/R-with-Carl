@@ -1,0 +1,24 @@
+---
+title: "Assignment 4"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE}
+library(tidyverse)
+library(knitr)
+library(gapminder)
+```
+
+**Exercise 1. Theophylline experiment**
+
+This exercise uses the `Theoph` data frame (comes with your R installation), which has 132 rows and 5 columns of data from an experiment on the pharmacokinetics of the anti-asthmatic drug theophylline. Twelve subjects were given oral doses of theophylline then serum concentrations were measured at 11 time points over the next 25 hours. You can learn more about this dataset by running `?Theoph`
+
+Have a look at the data structure
+```{r, include=TRUE}
+kable(head(Theoph))
+```
+

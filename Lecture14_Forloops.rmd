@@ -31,6 +31,22 @@ library(gapminder) #install.packages("gapminder")
 gapminder
 
 ```
+Let's do an example where we look at Afghanistan's gdpPercap
+```{r}
+## filter the country to plot
+gap_to_plot <- gapminder %>%
+  filter(country == "Afghanistan")
+
+## plot
+my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdp_per_cap)) + 
+  geom_point() +
+  labs(title = "Afghanistan")
+
+##add better title and save 
+ labs(title = paste("Afghanistan", "GDP per capita", sep = " "))
+ggsave(filename = "Afghanistan_gdpPercap.png", plot = my_plot)
+```
+
 
 <br>
 
@@ -39,7 +55,7 @@ Here is the for loop we created together to save plots of gdp_per_cap vs. year f
 ```{r, eval = TRUE, message = FALSE}
 
 # Clean up variable names
-gapminder <- gapminder |> 
+gapminder <- gapminder %>% 
   rename("life_exp" = lifeExp, "gdp_per_cap" = gdpPercap)
 
 dir.create("gap_figs") 
@@ -64,6 +80,54 @@ for (cntry in country_list) {
 } 
 
 ```
+Thinking ahead: cleaning up our code
+Now, in our code above, we’ve had to write out “Afghanistan” several times. This makes it not only typo-prone as we type it each time, but if we wanted to plot another country, we’d have to write that in 3 places too. It is not setting us up for an easy time in our future, and thinking ahead in programming is something to keep in mind.
+
+Instead of having “Afghanistan” written 3 times, let’s instead create an object that we will assign “Afghanistan” to. We won’t name our object “country” because that’s a column header with gapminder, and will just confuse us. Let’s make it distinctive: let’s write cntry (country without vowels):
+```{r}
+## create country variable
+cntry <- "Afghanistan"
+```
+Now, we can replace each "Afghanistan" with our variable cntry. We will have to introduce a paste statement here too, and we want to separate by nothing ("").
+```{r}
+## create country variable
+cntry <- "Afghanistan"
+
+## filter the country to plot
+gap_to_plot <- gapminder %>%
+  filter(country == cntry)
+
+## plot
+my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdp_per_cap)) + 
+  geom_point() +
+  ## add title and save
+  labs(title = paste(cntry, "GDP per capita", sep = " "))
+## note: there are many ways to create filenames with paste() or file.path(); we are doing this way for a reason.
+ggsave(filename = paste(cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+```
+The basic structure of a for loop is:
+for (each item in set of items) {do a thing}
+```{r}
+## create a list of countries
+country_list <- c("Albania", "Fiji", "Spain")
+
+for (cntry in country_list) {
+  
+  ## filter the country to plot
+  gap_to_plot <- gapminder %>%
+    filter(country == cntry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdp_per_cap)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, "GDP per capita", sep = " "))
+  
+  ggsave(filename = paste(cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+}
+
+```
+
 
 This code has been copied to the code chunk below.
 
@@ -102,7 +166,43 @@ for (cntry in country_list) {
   ggsave(filename = str_c("gap_figs/", cntry, "_gdp_per_cap.png", sep = ""), plot = my_plot)
 } 
 
-
 ```
+Want to make a new directory of figures
+```{r}
+dir.create("figures") 
+
+## create a list of countries
+country_list <- unique(gapminder$country) # ?unique() returns the unique values
+
+for (cntry in country_list) {
+  
+  ## filter the country to plot
+  gap_to_plot <- gapminder %>%
+    filter(country == cntry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdp_per_cap)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, "GDP per capita", sep = " "))
+  
+  ## add the figures/ folder
+  ggsave(filename = paste("figures/", cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+} 
+```
+```{r}
+dir.create("C:/Users/arabella.lewis/Documents/R-with-Carl/figures/Europe")
+
+gapminder_EU <- gapminder %>% filter(continent=="Europe") 
+
+gapminder_EU <- unique(gapminder_EU$country)
+
+gapminder_EU <- gapminder_EU %>% 
+  mutate(total_GDP=gdp_per_cap*pop)
+
+View(gapminder_EU)
+ 
+```
+
 
 <br> 
