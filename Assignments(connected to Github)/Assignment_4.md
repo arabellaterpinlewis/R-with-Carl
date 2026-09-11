@@ -42,3 +42,39 @@ dataset. Do not manually list all the columns to include.**
 | 1       | 79.6 |
 | 1       | 79.6 |
 | 1       | 79.6 |
+
+**1.2 Rename the `Wt` column to `Weight` and `conc` column to
+`Concentration` in the `Theoph` dataset.**
+
+| Subject | Weight | Dose | Time | Concentration |
+|:--------|-------:|-----:|-----:|--------------:|
+| 1       |   79.6 | 4.02 | 0.00 |          0.74 |
+| 1       |   79.6 | 4.02 | 0.25 |          2.84 |
+| 1       |   79.6 | 4.02 | 0.57 |          6.57 |
+| 1       |   79.6 | 4.02 | 1.12 |         10.50 |
+| 1       |   79.6 | 4.02 | 2.02 |          9.66 |
+| 1       |   79.6 | 4.02 | 3.82 |          8.58 |
+
+**1.3 Extract the `Dose` greater than 4.5 and `Time` greater than the
+mean `Time`.**
+
+| Subject |   Wt | Dose |  Time | conc |
+|:--------|-----:|-----:|------:|-----:|
+| 3       | 70.5 | 4.53 |  7.07 | 5.30 |
+| 3       | 70.5 | 4.53 |  9.00 | 4.90 |
+| 3       | 70.5 | 4.53 | 12.15 | 3.70 |
+| 3       | 70.5 | 4.53 | 24.17 | 1.05 |
+| 5       | 54.6 | 5.86 |  7.02 | 7.09 |
+| 5       | 54.6 | 5.86 |  9.10 | 5.90 |
+
+**1.4 Sort the Theoph dataset by Wt from smallest to largest and
+secondarily by Time from largest to smallest.**
+
+| Subject |   Wt | Dose |  Time | conc |
+|:--------|-----:|-----:|------:|-----:|
+| 5       | 54.6 | 5.86 | 24.35 | 1.57 |
+| 5       | 54.6 | 5.86 | 12.00 | 4.37 |
+| 5       | 54.6 | 5.86 |  9.10 | 5.90 |
+| 5       | 54.6 | 5.86 |  7.02 | 7.09 |
+| 5       | 54.6 | 5.86 |  5.02 | 7.56 |
+| 5       | 54.6 | 5.86 |  3.50 | 8.74 |
