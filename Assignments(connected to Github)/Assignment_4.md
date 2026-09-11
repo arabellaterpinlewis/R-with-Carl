@@ -30,3 +30,15 @@ kable(head(Theoph))
 | 1       | 79.6 | 4.02 | 1.12 | 10.50 |
 | 1       | 79.6 | 4.02 | 2.02 |  9.66 |
 | 1       | 79.6 | 4.02 | 3.82 |  8.58 |
+
+**1.1 Select columns that contain a lower case “t” in the `Theoph`
+dataset. Do not manually list all the columns to include.**
+
+| Subject |   Wt |
+|:--------|-----:|
+| 1       | 79.6 |
+| 1       | 79.6 |
+| 1       | 79.6 |
+| 1       | 79.6 |
+| 1       | 79.6 |
+| 1       | 79.6 |

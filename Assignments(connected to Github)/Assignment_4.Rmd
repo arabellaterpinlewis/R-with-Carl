@@ -22,3 +22,12 @@ Have a look at the data structure
 kable(head(Theoph))
 ```
 
+**1.1 Select columns that contain a lower case “t” in the `Theoph` dataset. Do not manually list all the columns to include.**
+```{r, echo=FALSE}
+Low_t <- select(Theoph, Subject, Wt)
+kable(Low_t[1:6,])
+
+```
+
+
+
