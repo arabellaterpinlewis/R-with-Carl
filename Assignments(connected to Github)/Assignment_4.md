@@ -5,6 +5,7 @@ Assignment 4
 library(tidyverse)
 library(knitr)
 library(gapminder)
+library(kableExtra)
 ```
 
 **Exercise 1. Theophylline experiment**
@@ -78,3 +79,22 @@ secondarily by Time from largest to smallest.**
 | 5       | 54.6 | 5.86 |  7.02 | 7.09 |
 | 5       | 54.6 | 5.86 |  5.02 | 7.56 |
 | 5       | 54.6 | 5.86 |  3.50 | 8.74 |
+
+**1.5 Create a new column called Quantity that equals to Wt x Dose in
+the Theoph dataset. This will tell you the absolute quantity of drug
+administered to the subject (in mg). Replace the Dose variable with
+Quantity.**
+
+``` r
+Theoph_absolute <- mutate(Theoph, Quantity = Wt*Dose) 
+kable(Theoph_absolute[1:6,])
+```
+
+| Subject |   Wt | Dose | Time |  conc | Quantity |
+|:--------|-----:|-----:|-----:|------:|---------:|
+| 1       | 79.6 | 4.02 | 0.00 |  0.74 |  319.992 |
+| 1       | 79.6 | 4.02 | 0.25 |  2.84 |  319.992 |
+| 1       | 79.6 | 4.02 | 0.57 |  6.57 |  319.992 |
+| 1       | 79.6 | 4.02 | 1.12 | 10.50 |  319.992 |
+| 1       | 79.6 | 4.02 | 2.02 |  9.66 |  319.992 |
+| 1       | 79.6 | 4.02 | 3.82 |  8.58 |  319.992 |
